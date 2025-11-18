@@ -1,11 +1,1 @@
-{
-  "events": [
-    {
-      "id": "e1",
-      "title": "A dummy event",
-      "date": "2023-02-22",
-      "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/09/40/ba/3c/connaught-place.jpg",
-      "description": "Join this amazing event and connect with fellow developers."
-    }
-  ]
-}
+{"events":[{"id":"e4","title":"A dummy event","date":"2023-02-22","image":"https://dynamic-media-cdn.tripadvisor.com/media/photo-o/09/40/ba/3c/connaught-place.jpg","description":"Join this amazing event and connect with fellow developers."}]}
