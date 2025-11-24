@@ -1,4 +1,4 @@
-import { useNavigate, useLoaderData } from "react-router-dom";
+import { useNavigate, useLoaderData, Form, redirect } from "react-router-dom";
 import { useState, useEffect } from "react";
 
 export default function NewEvent() {
@@ -34,51 +34,6 @@ export default function NewEvent() {
         }));
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setLoading(true);
-        setError(null);
-
-        const isEdit = !!(loaderEvent && (loaderEvent.id ?? loaderEvent._id));
-
-        try {
-            const url = isEdit
-                ? `http://localhost:8080/events/${loaderEvent.id ?? loaderEvent._id}`
-                : "http://localhost:8080/events";
-
-            const method = isEdit ? "PATCH" : "POST";
-
-            const response = await fetch(url, {
-                method,
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(formData),
-            });
-
-            if (!response.ok) {
-                const text = await response.text().catch(() => null);
-                console.log("Response not ok:", response.status, text);
-                throw new Error(text || "Failed to save event.");
-            }
-
-            const saved = await response.json().catch(() => null);
-
-            // navigate to event detail after edit, or events list after create
-            if (isEdit) {
-                const id = loaderEvent.id ?? loaderEvent._id ?? saved?.id ?? saved?._id;
-                if (id) navigate(`/events/${id}`);
-                else navigate("/events");
-            } else {
-                navigate("/events");
-            }
-        } catch (err) {
-            setError(err.message || "An error occurred.");
-        } finally {
-            setLoading(false);
-        }
-    };
-
     const isEditMode = !!(loaderEvent && (loaderEvent.id ?? loaderEvent._id));
 
     return (
@@ -91,7 +46,7 @@ export default function NewEvent() {
                 </div>
             )}
 
-            <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+            <Form method={isEditMode ? "patch" : "post"} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
                 <div>
                     <label htmlFor="title" style={{ display: "block", marginBottom: 6, fontWeight: 500 }}>
                         Event Title *
@@ -217,7 +172,38 @@ export default function NewEvent() {
                         Cancel
                     </button>
                 </div>
-            </form>
+            </Form>
         </div>
     );
 }
+
+export async function action({ request, params }) {
+    const method = request.method;
+    const data = await request.formData();
+
+    const eventData = {
+        title: data.get("title"),
+        description: data.get("description"),
+        image: data.get("image"),
+        date: data.get("date"),
+    };
+    const isEdit = method === "PATCH";
+
+    const url = isEdit
+        ? `http://localhost:8080/events/${params.id}`
+        : "http://localhost:8080/eventshhh";               
+    const response = await fetch(url, {
+        method: isEdit ? "PATCH" : "POST",
+        headers: { 
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(eventData),
+    });                         
+
+
+    if (!response.ok) {
+        throw new Response("Could not save event.", { status: 500 });
+    }           
+
+    return redirect("/events");
+}    
