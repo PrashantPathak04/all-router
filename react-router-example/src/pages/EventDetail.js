@@ -1,4 +1,4 @@
-import { useParams, useNavigate, useLoaderData } from "react-router-dom";
+import { useParams, useNavigate, useLoaderData,useSubmit } from "react-router-dom";
 import { useState } from "react";
 
 export default function EventDetail() {
@@ -7,16 +7,13 @@ export default function EventDetail() {
     const event = data?.event ?? data; // handle responses like { event: {...} } or {...}
     const navigate = useNavigate();
     const [deleting, setDeleting] = useState(false);
+    const submit = useSubmit();
 
     const handleDelete = async () => {
         if (!window.confirm("Delete this event? This action cannot be undone.")) return;
         setDeleting(true);
         try {
-            const res = await fetch(`http://localhost:8080/events/${params.id}`, {
-                method: "DELETE",
-            });
-            if (!res.ok) throw new Error("Failed to delete event");
-            navigate("/events", { replace: true });
+            submit(null, { method: "delete"});
         } catch (err) {
             console.error(err);
             alert("Could not delete event.");
@@ -108,3 +105,16 @@ export async function loader({ params }) {
   }
   return response.json();
 }
+
+export async function action({ params, request }) {
+    if (request.method.toLowerCase() !== "delete") {
+        throw new Response("Method Not Allowed", { status: 405 });
+    }       
+    const response = await fetch(`http://localhost:8080/events/${params.id}`, {
+        method: "DELETE",
+    });
+    if (!response.ok) {
+     throw new Response("Failed to delete event.", { status: response.status });
+    }  
+    return null;
+}           

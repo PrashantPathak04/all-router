@@ -191,7 +191,7 @@ export async function action({ request, params }) {
 
     const url = isEdit
         ? `http://localhost:8080/events/${params.id}`
-        : "http://localhost:8080/eventshhh";               
+        : "http://localhost:8080/events";               
     const response = await fetch(url, {
         method: isEdit ? "PATCH" : "POST",
         headers: { 

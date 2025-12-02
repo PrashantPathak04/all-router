@@ -7,7 +7,7 @@ import NewEvent,{action as eventSaveAction} from "./pages/NewEvent";
 
 import Root from "./pages/Root";
 import EventsRoot from "./pages/EventsRoot";
-import EventDetail,{loader as eventDetailLoader} from "./pages/EventDetail";
+import EventDetail,{loader as eventDetailLoader,action as deleteAction} from "./pages/EventDetail";
 import ErrorDetail from "./pages/ErrorDetail";
 
 const router = createBrowserRouter([
@@ -22,7 +22,7 @@ const router = createBrowserRouter([
         element: <EventsRoot />,
         children: [
           { index: true, element: <Event />, loader: eventLoader}, 
-          { path: ":id", element: <EventDetail />, loader:eventDetailLoader},
+          { path: ":id", element: <EventDetail />, loader:eventDetailLoader, action: deleteAction},
           { path: ":id/edit", element: <NewEvent />, loader: eventDetailLoader,action: eventSaveAction },
         ],
       },
