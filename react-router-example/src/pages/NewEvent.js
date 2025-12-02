@@ -1,10 +1,11 @@
-import { useNavigate, useLoaderData, Form, redirect } from "react-router-dom";
+import { useNavigate, useLoaderData, Form, redirect,useActionData } from "react-router-dom";
 import { useState, useEffect } from "react";
 
 export default function NewEvent() {
     const EditloaderEvent = useLoaderData(); // if route provided loader data (for edit), it'll be here
     const loaderEvent = EditloaderEvent?.event ?? EditloaderEvent; // adjust for different loader data shapes 
     const navigate = useNavigate();
+    const actionData = useActionData();
     const [formData, setFormData] = useState(() => ({
         title: loaderEvent?.title ?? "",
         description: loaderEvent?.description ?? loaderEvent?.desc ?? "",
@@ -47,6 +48,14 @@ export default function NewEvent() {
             )}
 
             <Form method={isEditMode ? "patch" : "post"} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+                
+                {actionData?.errors && (
+                   <>
+                       {Object.values(actionData.errors).map((errMsg, index) => (
+                           <div key={index} style={{ color: "red", marginBottom: 8 }}>{errMsg}</div>
+                       ))}
+                   </>
+                )}
                 <div>
                     <label htmlFor="title" style={{ display: "block", marginBottom: 6, fontWeight: 500 }}>
                         Event Title *
@@ -199,7 +208,9 @@ export async function action({ request, params }) {
         },
         body: JSON.stringify(eventData),
     });                         
-
+    if(response.status === 422){
+        return response;
+    }   
 
     if (!response.ok) {
         throw new Response("Could not save event.", { status: 500 });
