@@ -9,6 +9,8 @@ import Root from "./pages/Root";
 import EventsRoot from "./pages/EventsRoot";
 import EventDetail,{loader as eventDetailLoader,action as deleteAction} from "./pages/EventDetail";
 import ErrorDetail from "./pages/ErrorDetail";
+import {action as NewsletterAction} from "./pages/Newsletter";
+import NewsletterSignup from "./pages/NewsletterSignup";
 
 const router = createBrowserRouter([
   {
@@ -27,6 +29,7 @@ const router = createBrowserRouter([
         ],
       },
       { path: "events/add", element: <NewEvent />, action: eventSaveAction},
+      { path: "newsletter", element: <NewsletterSignup />, action: NewsletterAction},
     ],
   },
 ]);

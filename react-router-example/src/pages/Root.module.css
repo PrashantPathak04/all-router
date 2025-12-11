@@ -22,3 +22,9 @@
   color: blue;
   text-decoration: underline;
 }
+
+.navbar {
+ display: flex;
+ justify-content: space-between;
+ width: 100%;
+}

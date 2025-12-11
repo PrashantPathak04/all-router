@@ -1,4 +1,4 @@
-import { Link, Outlet, useLoaderData, useNavigate } from "react-router-dom";
+import { Link, useLoaderData, useNavigate } from "react-router-dom";
 
 export default function Event() {
   const events = useLoaderData();
