@@ -11,6 +11,7 @@ import EventDetail,{loader as eventDetailLoader,action as deleteAction} from "./
 import ErrorDetail from "./pages/ErrorDetail";
 import {action as NewsletterAction} from "./pages/Newsletter";
 import NewsletterSignup from "./pages/NewsletterSignup";
+import Auth, { action as authAction } from "./pages/Auth";
 
 const router = createBrowserRouter([
   {
@@ -29,6 +30,7 @@ const router = createBrowserRouter([
         ],
       },
       { path: "events/add", element: <NewEvent />, action: eventSaveAction},
+      { path: "auth", element: <Auth />, action: authAction},
       { path: "newsletter", element: <NewsletterSignup />, action: NewsletterAction},
     ],
   },

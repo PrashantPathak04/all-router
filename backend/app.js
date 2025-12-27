@@ -2,6 +2,7 @@ const bodyParser = require('body-parser');
 const express = require('express');
 
 const eventRoutes = require('./routes/events');
+const authRoutes = require('./routes/auth');
 
 const app = express();
 
@@ -14,6 +15,7 @@ app.use((req, res, next) => {
 });
 
 app.use('/events', eventRoutes);
+app.use('/auth', authRoutes);
 
 app.use((error, req, res, next) => {
   const status = error.status || 500;

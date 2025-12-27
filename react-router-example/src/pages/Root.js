@@ -16,6 +16,9 @@ export default function Root() {
             <li>
               <NavLink to="newsletter" className={({ isActive }) => (isActive ? styles.active : undefined)}>Newsletter</NavLink>
             </li>
+             <li>
+              <NavLink to="auth" className={({ isActive }) => (isActive ? styles.active : undefined)}>Authentication</NavLink>
+            </li>
           </ul>
              <Newsletter />
         </nav>
