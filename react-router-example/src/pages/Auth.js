@@ -1,10 +1,13 @@
 import { Form, useActionData, useSearchParams, Link, redirect } from "react-router-dom";
+import { useContext } from "react";
+import { AuthContext } from "../App";
 
 export default function Auth() {
   const [searchParams, setSearchParams] = useSearchParams();
   const mode = searchParams.get("mode") === "signup" ? "signup" : "login";
   const actionData = useActionData();
-  console.log(actionData);
+  const authCtx = useContext(AuthContext);
+  // auth state is synced in `App.js` from localStorage after actions redirect
 
   return (
     <div style={{ maxWidth: 480, margin: "40px auto", padding: 20 }}>
@@ -33,11 +36,20 @@ export default function Auth() {
           <button type="submit" style={{ padding: "8px 12px" }}>
             {mode === "signup" ? "Create Account" : "Sign In"}
           </button>
-          <button type="button" onClick={() => setSearchParams({ mode: mode === "signup" ? "login" : "signup" })} style={{ padding: "8px 12px" }}>
+          <button
+            type="button"
+            onClick={() => {
+              const nextMode = mode === "signup" ? "login" : "signup";
+              const params = Object.fromEntries([...searchParams]);
+              params.mode = nextMode;
+              setSearchParams(params);
+            }}
+            style={{ padding: "8px 12px" }}
+          >
             {mode === "signup" ? "Have an account? Sign in" : "New here? Create account"}
           </button>
         </div>
-      </Form>
+      </Form>   
 
       <p style={{ marginTop: 16 }}>
         Or go back to <Link to="/">Home</Link>.
@@ -86,6 +98,9 @@ export async function action({ request }) {
       // ignore parse errors and continue to redirect
     }
 
+    // // honor redirectTo param if present
+    // const redirectTo = new URL(request.url).searchParams.get('redirectTo') || '/';
+    // return redirect(redirectTo);
     return redirect("/");
   } catch (err) {
     return { message: "Network error. Please try again." };

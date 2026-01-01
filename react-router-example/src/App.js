@@ -12,7 +12,12 @@ import ErrorDetail from "./pages/ErrorDetail";
 import {action as NewsletterAction} from "./pages/Newsletter";
 import NewsletterSignup from "./pages/NewsletterSignup";
 import Auth, { action as authAction } from "./pages/Auth";
+import { requireAuth } from "./util/requireAuth";
+import { createContext,useState } from "react";
+import ProtectedRoute from "./pages/ProtectedRoute";
+// import { useLocation } from "react-router-dom";
 
+export const AuthContext = createContext(false);
 const router = createBrowserRouter([
   {
     path: "/",
@@ -22,14 +27,15 @@ const router = createBrowserRouter([
       { index: true, element: <Home /> },
       {
         path: "events",
-        element: <EventsRoot />,
+        element: <ProtectedRoute><EventsRoot /></ProtectedRoute>,
+        // loader: requireAuth,
         children: [
           { index: true, element: <Event />, loader: eventLoader}, 
           { path: ":id", element: <EventDetail />, loader:eventDetailLoader, action: deleteAction},
           { path: ":id/edit", element: <NewEvent />, loader: eventDetailLoader,action: eventSaveAction },
         ],
       },
-      { path: "events/add", element: <NewEvent />, action: eventSaveAction},
+      { path: "events/add", element: <NewEvent />, action: eventSaveAction, loader: requireAuth},
       { path: "auth", element: <Auth />, action: authAction},
       { path: "newsletter", element: <NewsletterSignup />, action: NewsletterAction},
     ],
@@ -37,7 +43,13 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  return <RouterProvider router={router} />;
+  const [isLoginedIn, setIsLoggedIn] = useState(() => !!localStorage.getItem('token'));
+
+  return (
+    <AuthContext.Provider value={{ isLoggedIn: isLoginedIn, setIsLoggedIn }}>
+      <RouterProvider router={router} />
+    </AuthContext.Provider>
+  );
 }
 
 export default App;
