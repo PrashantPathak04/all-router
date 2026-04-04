@@ -1,10 +1,11 @@
 import { useParams, useNavigate, useLoaderData,useSubmit } from "react-router-dom";
 import { useState } from "react";
+import PageWrapper from "./PageWrapper";
 
 export default function EventDetail() {
     const params = useParams();
     const data = useLoaderData();
-    const event = data?.event ?? data; // handle responses like { event: {...} } or {...}
+    const event = data?.event ?? data;
     const navigate = useNavigate();
     const [deleting, setDeleting] = useState(false);
     const submit = useSubmit();
@@ -23,78 +24,80 @@ export default function EventDetail() {
     };
 
     return (
-        <>
-            <div style={{ maxWidth: 900, margin: "16px auto", padding: 16 }}>
-                <button onClick={() => navigate("/events")} style={{ marginBottom: 12 }}>
-                    ← Back to Events
-                </button>
+        <PageWrapper
+            title={event?.title ?? `Event ${params.id}`}
+            subtitle="Detailed information and actions."
+        >
+            <button onClick={() => navigate("/events")} style={{ marginBottom: 20, padding: '10px 14px', borderRadius: 10, border: '1px solid #d1d5db', background: 'white', cursor: 'pointer' }}>
+                ← Back to Events
+            </button>
 
-                <div style={{ display: "flex", gap: 20, alignItems: "flex-start" }}>
-                    <div style={{ flex: "0 0 320px" }}>
-                        {event?.image ? (
-                            <img
-                                src={event.image}
-                                alt={event.title || "Event image"}
-                                style={{ width: "100%", height: "auto", borderRadius: 8, objectFit: "cover" }}
-                            />
-                        ) : (
-                            <div
-                                style={{
-                                    width: "100%",
-                                    paddingTop: "56%",
-                                    background: "#f0f0f0",
-                                    borderRadius: 8,
-                                    display: "flex",
-                                    alignItems: "center",
-                                    justifyContent: "center",
-                                    color: "#666",
-                                }}
-                            >
-                                No image
-                            </div>
-                        )}
-                    </div>
-
-                    <div style={{ flex: 1 }}>
-                        <h1 style={{ marginTop: 0 }}>{event?.title ?? `Event ${params.id}`}</h1>
-                        <p style={{ color: "#444", whiteSpace: "pre-wrap" }}>
-                            {event?.description ?? event?.desc ?? "No description available."}
-                        </p>
-
-                        <div style={{ marginTop: 16, display: "flex", gap: 8 }}>
-                            <button
-                                onClick={() => navigate(`/events/${params.id}/edit`)}
-                                style={{
-                                    padding: "8px 12px",
-                                    background: "#28a745",
-                                    color: "#fff",
-                                    border: "none",
-                                    borderRadius: 6,
-                                    cursor: "pointer",
-                                }}
-                            >
-                                Edit
-                            </button>
-
-                            <button
-                                onClick={handleDelete}
-                                disabled={deleting}
-                                style={{
-                                    padding: "8px 12px",
-                                    background: "#dc3545",
-                                    color: "#fff",
-                                    border: "none",
-                                    borderRadius: 6,
-                                    cursor: deleting ? "not-allowed" : "pointer",
-                                }}
-                            >
-                                {deleting ? "Deleting..." : "Delete"}
-                            </button>
+            <div style={{ display: "flex", gap: 20, alignItems: "flex-start", flexWrap: 'wrap' }}>
+                <div style={{ flex: "0 0 320px", minWidth: 280 }}>
+                    {event?.image ? (
+                        <img
+                            src={event.image}
+                            alt={event.title || "Event image"}
+                            style={{ width: "100%", height: "auto", borderRadius: 18, objectFit: "cover" }}
+                        />
+                    ) : (
+                        <div
+                            style={{
+                                width: "100%",
+                                paddingTop: "56%",
+                                background: "#f0f0f0",
+                                borderRadius: 18,
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                color: "#666",
+                            }}
+                        >
+                            No image
                         </div>
+                    )}
+                </div>
+
+                <div style={{ flex: 1, minWidth: 280 }}>
+                    <p style={{ color: "#4b5563", marginTop: 0, whiteSpace: "pre-wrap" }}>
+                        {event?.description ?? event?.desc ?? "No description available."}
+                    </p>
+
+                    <div style={{ marginTop: 24, display: "flex", gap: 12, flexWrap: 'wrap' }}>
+                        <button
+                            onClick={() => navigate(`/events/${params.id}/edit`)}
+                            style={{
+                                padding: "12px 16px",
+                                background: "#28a745",
+                                color: "#fff",
+                                border: "none",
+                                borderRadius: 12,
+                                cursor: 'pointer',
+                                minWidth: 120,
+                            }}
+                        >
+                            Edit
+                        </button>
+
+                        <button
+                            onClick={handleDelete}
+                            disabled={deleting}
+                            style={{
+                                padding: "12px 16px",
+                                background: "#dc3545",
+                                color: "#fff",
+                                border: "none",
+                                borderRadius: 12,
+                                cursor: deleting ? "not-allowed" : "pointer",
+                                minWidth: 120,
+                            }}
+                        >
+                            {deleting ? "Deleting..." : "Delete"}
+                        </button>
                     </div>
                 </div>
             </div>
-        </>
+        </PageWrapper>
     );
 }
 

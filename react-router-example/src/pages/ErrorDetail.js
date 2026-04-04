@@ -1,6 +1,7 @@
 
 import { useRouteError, isRouteErrorResponse, useNavigate } from "react-router-dom";
 import Root from "./Root";
+import PageWrapper from "./PageWrapper";
 
 export default function ErrorDetail() {
     const error = useRouteError();
@@ -22,23 +23,16 @@ export default function ErrorDetail() {
     return (
         <>
         <Root />
-        <div style={{ padding: 20, fontFamily: "system-ui, -apple-system, Segoe UI, Roboto, 'Helvetica Neue', Arial" }}>
-            <h1 style={{ marginTop: 0 }}>{title}</h1>
-            <p style={{ whiteSpace: "pre-wrap" }}>{String(message)}</p>
-
-            {/* {process.env.NODE_ENV === "development" && error && (
-                <pre style={{ background: "#f6f8fa", padding: 12, borderRadius: 6, overflow: "auto" }}>
-                    {String((error && (error.stack ?? JSON.stringify(error, null, 2))) || "")}
-                </pre>
-            )} */}
-
+        <PageWrapper title={title} subtitle={String(message)}>
             <div style={{ marginTop: 16 }}>
-                <button onClick={() => navigate("/", { replace: true })} style={{ marginRight: 8 }}>
+                <button onClick={() => navigate("/", { replace: true })} style={{ marginRight: 8, padding: 10, borderRadius: 8, border: '1px solid #d1d5db', background: 'white', cursor: 'pointer' }}>
                     Go home
                 </button>
-                <button onClick={() => navigate(-1)}>Go back</button>
+                <button onClick={() => navigate(-1)} style={{ padding: 10, borderRadius: 8, border: '1px solid #d1d5db', background: 'white', cursor: 'pointer' }}>
+                    Go back
+                </button>
             </div>
-        </div>
+        </PageWrapper>
         </>
     );
 }

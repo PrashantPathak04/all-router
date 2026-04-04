@@ -1,20 +1,21 @@
 import { Form, useActionData, useSearchParams, Link, redirect } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../App";
+import PageWrapper from "./PageWrapper";
 
 export default function Auth() {
   const [searchParams, setSearchParams] = useSearchParams();
   const mode = searchParams.get("mode") === "signup" ? "signup" : "login";
   const actionData = useActionData();
   const authCtx = useContext(AuthContext);
-  // auth state is synced in `App.js` from localStorage after actions redirect
 
   return (
-    <div style={{ maxWidth: 480, margin: "40px auto", padding: 20 }}>
-      <h1 style={{ marginBottom: 12 }}>{mode === "signup" ? "Create account" : "Sign in"}</h1>
-
+    <PageWrapper
+      title={mode === "signup" ? "Create account" : "Sign in"}
+      subtitle="Secure authentication for your session."
+    >
       {actionData && actionData.message && (
-        <div style={{ background: "#f8d7da", color: "#721c24", padding: 10, borderRadius: 6, marginBottom: 12 }}>
+        <div style={{ background: "#f8d7da", color: "#721c24", padding: 10, borderRadius: 8, marginBottom: 12 }}>
           {actionData.message}
         </div>
       )}
@@ -54,7 +55,7 @@ export default function Auth() {
       <p style={{ marginTop: 16 }}>
         Or go back to <Link to="/">Home</Link>.
       </p>
-    </div>
+    </PageWrapper>
   );
 }
 

@@ -1,21 +1,21 @@
 import { useNavigate, useLoaderData, Form, redirect,useActionData } from "react-router-dom";
 import { useState, useEffect } from "react";
+import PageWrapper from "./PageWrapper";
 
 export default function NewEvent() {
-    const EditloaderEvent = useLoaderData(); // if route provided loader data (for edit), it'll be here
-    const loaderEvent = EditloaderEvent?.event ?? EditloaderEvent; // adjust for different loader data shapes 
+    const EditloaderEvent = useLoaderData();
+    const loaderEvent = EditloaderEvent?.event ?? EditloaderEvent;
     const navigate = useNavigate();
     const actionData = useActionData();
     const [formData, setFormData] = useState(() => ({
         title: loaderEvent?.title ?? "",
         description: loaderEvent?.description ?? loaderEvent?.desc ?? "",
         image: loaderEvent?.image ?? "",
-        date: loaderEvent?.date ?? loaderEvent?.dateTime ?? "", // added date field
+        date: loaderEvent?.date ?? loaderEvent?.dateTime ?? "",
     }));
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    // update form when loader data arrives or changes (useful when editing)
     useEffect(() => {
         if (loaderEvent) {
             setFormData({
@@ -38,17 +38,17 @@ export default function NewEvent() {
     const isEditMode = !!(loaderEvent && (loaderEvent.id ?? loaderEvent._id));
 
     return (
-        <div style={{ marginLeft: "10%", marginRight: "10%", maxWidth: 600 }}>
-            <h1>{isEditMode ? "Edit Event" : "Add New Event"}</h1>
-
+        <PageWrapper
+            title={isEditMode ? "Edit Event" : "Add New Event"}
+            subtitle="Use this form to save and update event details."
+        >
             {error && (
-                <div style={{ background: "#f8d7da", color: "#721c24", padding: 12, borderRadius: 4, marginBottom: 16 }}>
+                <div style={{ background: "#f8d7da", color: "#721c24", padding: 12, borderRadius: 8, marginBottom: 16 }}>
                     {error}
                 </div>
             )}
 
             <Form method={isEditMode ? "patch" : "post"} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-                
                 {actionData?.errors && (
                    <>
                        {Object.values(actionData.errors).map((errMsg, index) => (
@@ -69,9 +69,9 @@ export default function NewEvent() {
                         required
                         style={{
                             width: "100%",
-                            padding: "8px 12px",
+                            padding: "10px 14px",
                             border: "1px solid #ddd",
-                            borderRadius: 4,
+                            borderRadius: 10,
                             fontSize: 14,
                             boxSizing: "border-box",
                         }}
@@ -182,7 +182,7 @@ export default function NewEvent() {
                     </button>
                 </div>
             </Form>
-        </div>
+        </PageWrapper>
     );
 }
 

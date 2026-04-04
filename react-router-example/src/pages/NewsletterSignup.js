@@ -1,13 +1,17 @@
 import Newsletter from "./Newsletter";
+import PageWrapper from "./PageWrapper";
 
 const NewsletterSignup = () => {
   return (
-    <section>
-      <p />
-      <h1>Newsletter Page</h1>
-      <p>Subscribe to our newsletter to get the latest updates!</p>
+    <PageWrapper
+      title="Newsletter"
+      subtitle="Subscribe to get the latest updates."
+    >
+      <p style={{ color: '#4b5563', marginBottom: '1.5rem' }}>
+        Subscribe to our newsletter to get the latest updates!
+      </p>
       <Newsletter />
-    </section>
+    </PageWrapper>
   );
 };
 export default NewsletterSignup;
