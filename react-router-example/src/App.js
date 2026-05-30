@@ -16,21 +16,26 @@ import { requireAuth } from "./util/requireAuth";
 import { createContext,useState } from "react";
 import ProtectedRoute from "./pages/ProtectedRoute";
 // import { useLocation } from "react-router-dom";
+import {
+  QueryClient,
+  QueryClientProvider,
+} from '@tanstack/react-query'
 
 export const AuthContext = createContext(false);
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Root />,
-    errorElement: <ErrorDetail />,
+    // errorElement: <ErrorDetail />,
     children: [
       { index: true, element: <Home /> },
       {
         path: "events",
-        element: <ProtectedRoute><EventsRoot /></ProtectedRoute>,
+        // element: <ProtectedRoute><EventsRoot /></ProtectedRoute>,
+        element: <EventsRoot />,
         // loader: requireAuth,
         children: [
-          { index: true, element: <Event />, loader: eventLoader}, 
+          { index: true, element: <Event />}, 
           { path: ":id", element: <EventDetail />, loader:eventDetailLoader, action: deleteAction},
           { path: ":id/edit", element: <NewEvent />, loader: eventDetailLoader,action: eventSaveAction },
         ],
@@ -44,11 +49,14 @@ const router = createBrowserRouter([
 
 function App() {
   const [isLoginedIn, setIsLoggedIn] = useState(() => !!localStorage.getItem('token'));
+  const queryClient = new QueryClient()
 
   return (
+   <QueryClientProvider client={queryClient}>
     <AuthContext.Provider value={{ isLoggedIn: isLoginedIn, setIsLoggedIn }}>
       <RouterProvider router={router} />
     </AuthContext.Provider>
+    </QueryClientProvider>
   );
 }
 
